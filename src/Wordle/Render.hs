@@ -20,7 +20,7 @@ renderFeedback feedback = do
 
 renderFeedbackUnit :: FeedbackUnit -> IO ()
 renderFeedbackUnit FeedbackUnit{..} = do
-  setSGR [SetConsoleIntensity BoldIntensity]
+  setSGR [SetColor Foreground Dull Black, SetConsoleIntensity BoldIntensity]
   case accuracy of
     Correct -> setSGR [SetColor Background Dull Green]
     Incorrect -> setSGR [SetColor Background Dull White]
