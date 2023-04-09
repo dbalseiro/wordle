@@ -30,6 +30,8 @@ library
       Wordle.Game.Logic
       Wordle.Game.Types
       Wordle.Guess
+      Wordle.Guess.Validate
+      Wordle.Render
       Wordle.Utils
   other-modules:
       Paths_wordle
@@ -37,7 +39,9 @@ library
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      base >=4.7 && <5
+      ansi-terminal
+    , base >=4.7 && <5
+    , containers
   default-language: Haskell2010
 
 executable wordle-exe

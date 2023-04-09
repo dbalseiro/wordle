@@ -1,9 +1,10 @@
-module Wordle.Config (getTries, getWord) where
-
-import Wordle.Utils (notImplemented)
+module Wordle.Config (getTries, getWord, getLength) where
 
 getTries :: IO Int
-getTries = notImplemented
+getTries = return 10
 
 getWord :: IO String
-getWord = notImplemented
+getWord = return "DIEGO"
+
+getLength :: IO Int
+getLength = return 5
