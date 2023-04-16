@@ -1,6 +1,6 @@
-module Wordle.Config (getDictionary, getGameSettings, getWord) where
+module Wordle.Config (getGameSettings, getWord) where
 
-import Wordle.Utils (notImplemented, defaultRead)
+import Wordle.Utils (defaultRead)
 import Wordle.Game.Types ( GameSettings (..)
                          , WordLength (..)
                          , Tries (..)
@@ -14,7 +14,9 @@ import System.Random (randomRIO)
 import Control.Exception (throwIO)
 
 getGameSettings :: IO GameSettings
-getGameSettings = GameSettings <$> getWordLength <*> getTries
+getGameSettings = do
+  wl <- getWordLength
+  GameSettings wl <$> getTries <*> getDictionary wl
   where
     getTries :: IO Tries
     getTries = Tries . defaultRead 5 <$> lookupEnv "WORDLE_TRIES"
@@ -30,4 +32,5 @@ getWord dict =
         _ -> (dict !!) <$> randomRIO (0, limit)
 
 getDictionary :: WordLength -> IO Dictionary
-getDictionary = notImplemented
+getDictionary (WordLength 5) = lines <$> readFile "db"
+getDictionary (WordLength n) = throwIO (WordLengthNotImplemented n)

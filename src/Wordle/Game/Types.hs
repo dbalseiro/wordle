@@ -46,15 +46,23 @@ feedbackToString :: Feedback -> String
 feedbackToString = map letter
 
 
-data GameSettings = GameSettings WordLength Tries
+data GameSettings = GameSettings
+  { wordLength :: WordLength
+  , tries      :: Tries
+  , dictionary :: Dictionary
+  }
 
 newtype WordLength = WordLength { unWordLength :: Int }
 newtype Tries = Tries { unTries :: Int }
 
 type Dictionary = [String]
 
-data WordleException = EmptyDictionary
-  deriving Show
+data WordleException = EmptyDictionary | WordLengthNotImplemented Int
 
 instance Exception WordleException
+
+instance Show WordleException where
+  show EmptyDictionary = "Dictionary is empty"
+  show (WordLengthNotImplemented n) = "Words of length " ++ show n ++ " are not implemented yet"
+
 

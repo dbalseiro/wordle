@@ -5,19 +5,20 @@ import Data.Char (isLetter)
 import Data.Set (Set)
 import qualified Data.Set as S
 
-import Wordle.Game.Types (Config (..), Game (..), Guess, feedbackToString, WordLength (WordLength), GameSettings (GameSettings))
+import Wordle.Game.Types (Config (..), Game (..), Guess, feedbackToString, WordLength (WordLength), GameSettings (..))
 import Control.Applicative ((<|>))
 
-data Validation = InvalidLength !String !Int | InvalidCharacters (Set Char) | AlreadyExists String
+data Validation = InvalidLength !String !Int | InvalidCharacters (Set Char) | AlreadyExists String | NotInDictionary
   deriving Eq
 
 instance Show Validation where
   show (InvalidLength s l) = "Expecting answer of length " ++ show l ++ ", got " ++ s ++ " of length " ++ show (length s)
   show (InvalidCharacters s) = "There are invalid characters in your answer: [ " ++ S.toList s ++ " ]"
   show (AlreadyExists s) = "You already tried with " ++ s
+  show NotInDictionary = "Not in the current dictionary. Try again"
 
 validate :: Config -> Game -> Guess -> Maybe Validation
-validate Config{settings} Game{guesses} guess = tryAlreadyExist <|> tryInvalidCharacters <|> tryInvalidLength
+validate Config{settings} Game{guesses} guess = tryAlreadyExist <|> tryInvalidCharacters <|> tryInvalidLength <|> tryNotInDictionary
   where
     tryInvalidCharacters =
       let s = S.fromList (filter (not . isLetter) guess)
@@ -25,7 +26,7 @@ validate Config{settings} Game{guesses} guess = tryAlreadyExist <|> tryInvalidCh
             then Nothing
             else Just (InvalidCharacters s)
 
-    tryInvalidLength | GameSettings (WordLength l) _ <- settings, length guess /= l = Just (InvalidLength guess l)
+    tryInvalidLength | WordLength l <- wordLength settings, length guess /= l = Just (InvalidLength guess l)
                      | otherwise = Nothing
 
     tryAlreadyExist =
@@ -34,3 +35,5 @@ validate Config{settings} Game{guesses} guess = tryAlreadyExist <|> tryInvalidCh
             then Just (AlreadyExists guess)
             else Nothing
 
+    tryNotInDictionary | guess `notElem` dictionary settings = Just NotInDictionary
+                       | otherwise = Nothing
