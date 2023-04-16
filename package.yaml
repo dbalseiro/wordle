@@ -60,3 +60,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - wordle
+    - hspec
+    - containers
+    build-tools:
+    - hspec-discover

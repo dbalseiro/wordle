@@ -9,6 +9,7 @@ import Wordle.Game.Types (Config (..), Game (..), Guess, feedbackToString)
 import Control.Applicative ((<|>))
 
 data Validation = InvalidLength !String !Int | InvalidCharacters (Set Char) | AlreadyExists String
+  deriving Eq
 
 instance Show Validation where
   show (InvalidLength s l) = "Expecting answer of length " ++ show l ++ ", got " ++ s ++ " of length " ++ show (length s)

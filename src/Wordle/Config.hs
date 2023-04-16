@@ -8,3 +8,6 @@ getWord = return "DIEGO"
 
 getLength :: IO Int
 getLength = return 5
+
+getDictionary :: IO [String]
+getDictionary = undefined

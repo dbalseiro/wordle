@@ -24,7 +24,7 @@ updateGame Config{word} Game{guesses, try} guess =
     mkFeedback = map mkFeedbackUnit
 
     mkFeedbackUnit :: (Char, Char) -> FeedbackUnit
-    mkFeedbackUnit (charFromGuess, charFromWord) =
+    mkFeedbackUnit (charFromWord, charFromGuess) =
       FeedbackUnit charFromGuess (evaluate charFromGuess charFromWord)
 
     evaluate :: Char -> Char -> Accuracy
