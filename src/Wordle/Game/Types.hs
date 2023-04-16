@@ -6,8 +6,15 @@ module Wordle.Game.Types
   , Accuracy(..)
   , Guess
   , Outcome(..)
+  , GameSettings (..)
+  , Tries (..)
+  , WordLength (..)
+  , Dictionary
+  , WordleException (..)
   , feedbackToString
   ) where
+
+import Control.Exception (Exception)
 
 data Game = Game
   { guesses  :: ![Feedback]
@@ -16,9 +23,8 @@ data Game = Game
   } deriving (Eq, Show)
 
 data Config = Config
-  { tries      :: !Int
-  , word       :: !String
-  , wordLength :: !Int
+  { settings :: !GameSettings
+  , word     :: !String
   }
 
 data FeedbackUnit = FeedbackUnit
@@ -38,3 +44,17 @@ data Outcome = Won | WrongGuess | OutOfTries
 
 feedbackToString :: Feedback -> String
 feedbackToString = map letter
+
+
+data GameSettings = GameSettings WordLength Tries
+
+newtype WordLength = WordLength { unWordLength :: Int }
+newtype Tries = Tries { unTries :: Int }
+
+type Dictionary = [String]
+
+data WordleException = EmptyDictionary
+  deriving Show
+
+instance Exception WordleException
+

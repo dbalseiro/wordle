@@ -38,6 +38,7 @@ library:
   dependencies:
   - containers
   - ansi-terminal
+  - random
 
 executables:
   wordle-exe:

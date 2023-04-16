@@ -11,7 +11,7 @@ import System.Console.ANSI
 -- If the letter does not exist in the Configged word, then render it with a white background
 -- If the letter exists anywhere else in the word, then render it with a yellow bg
 renderGuesses :: Game -> IO ()
-renderGuesses Game{guesses} = mapM_ renderFeedback guesses
+renderGuesses Game{guesses} = mapM_ renderFeedback $ reverse guesses
 
 renderFeedback :: Feedback -> IO ()
 renderFeedback feedback = do

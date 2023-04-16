@@ -5,7 +5,7 @@ import Data.Char (isLetter)
 import Data.Set (Set)
 import qualified Data.Set as S
 
-import Wordle.Game.Types (Config (..), Game (..), Guess, feedbackToString)
+import Wordle.Game.Types (Config (..), Game (..), Guess, feedbackToString, WordLength (WordLength), GameSettings (GameSettings))
 import Control.Applicative ((<|>))
 
 data Validation = InvalidLength !String !Int | InvalidCharacters (Set Char) | AlreadyExists String
@@ -17,7 +17,7 @@ instance Show Validation where
   show (AlreadyExists s) = "You already tried with " ++ s
 
 validate :: Config -> Game -> Guess -> Maybe Validation
-validate Config{wordLength} Game{guesses} guess = tryAlreadyExist <|> tryInvalidCharacters <|> tryInvalidLength
+validate Config{settings} Game{guesses} guess = tryAlreadyExist <|> tryInvalidCharacters <|> tryInvalidLength
   where
     tryInvalidCharacters =
       let s = S.fromList (filter (not . isLetter) guess)
@@ -25,7 +25,7 @@ validate Config{wordLength} Game{guesses} guess = tryAlreadyExist <|> tryInvalid
             then Nothing
             else Just (InvalidCharacters s)
 
-    tryInvalidLength | length guess /= wordLength = Just (InvalidLength guess wordLength)
+    tryInvalidLength | GameSettings (WordLength l) _ <- settings, length guess /= l = Just (InvalidLength guess l)
                      | otherwise = Nothing
 
     tryAlreadyExist =

@@ -9,7 +9,7 @@ import Wordle.Game.Types ( Config (..)
                         , Feedback
                         , FeedbackUnit(..)
                         , Accuracy (..)
-                        , feedbackToString
+                        , feedbackToString, Tries (..), GameSettings (GameSettings)
                         )
 
 updateGame :: Config -> Game -> Guess -> Game
@@ -35,8 +35,8 @@ updateGame Config{word} Game{guesses, try} guess =
 
 
 guessOutcome :: Config -> Game -> Outcome
-guessOutcome Config{word, tries} Game{feedback, try}
+guessOutcome Config{word, settings} Game{feedback, try}
   | word == feedbackToString feedback = Won
-  | try >= tries                      = OutOfTries
-  | otherwise                         = WrongGuess
-  
+  | GameSettings _ (Tries t) <- settings, try >= t = OutOfTries
+  | otherwise = WrongGuess
+
