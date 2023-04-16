@@ -23,10 +23,11 @@ spec = do
       let (game', _) = losingGame
       context "and you still have tries left" $
         it "returns Wrong Guess outcome" $
-          guessOutcome cfg { tries = 2 } game' `shouldBe` WrongGuess
+          let setts = (settings cfg) { tries = Tries 2 }
+          in guessOutcome cfg {settings = setts } game' `shouldBe` WrongGuess
       context "and you're out of tries" $
         it "returns Out Of Tries outcome" $
-          guessOutcome cfg  game' `shouldBe` OutOfTries
+          guessOutcome cfg game' `shouldBe` OutOfTries
 
 
 winningGame :: (Game, String)

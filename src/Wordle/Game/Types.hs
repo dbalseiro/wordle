@@ -53,6 +53,7 @@ data GameSettings = GameSettings
   }
 
 newtype WordLength = WordLength { unWordLength :: Int }
+
 newtype Tries = Tries { unTries :: Int }
 
 type Dictionary = [String]
