@@ -29,6 +29,8 @@ library
       Wordle.Game
       Wordle.Game.Logic
       Wordle.Game.Types
+      Wordle.Game.Types.Effects
+      Wordle.Game.Types.Impl
       Wordle.Guess
       Wordle.Guess.Validate
       Wordle.Render
@@ -42,6 +44,7 @@ library
       ansi-terminal
     , base >=4.7 && <5
     , containers
+    , mtl
     , random
   default-language: Haskell2010
 

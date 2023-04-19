@@ -39,6 +39,7 @@ library:
   - containers
   - ansi-terminal
   - random
+  - mtl
 
 executables:
   wordle-exe:

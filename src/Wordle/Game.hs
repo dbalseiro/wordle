@@ -1,28 +1,30 @@
+{-# LANGUAGE LambdaCase #-}
 module Wordle.Game (play) where
 
-import Wordle.Game.Types (Config(..), Game(..), Outcome(..), GameSettings (..))
-import Wordle.Game.Logic (updateGame, guessOutcome)
-
-import Wordle.Config (getWord, getGameSettings)
+import Wordle.Game.Types (Outcome (..))
+import Wordle.Config (getGameSettings, getWord)
+import Wordle.Game.Types.Effects (WordleM (..))
+import Wordle.Game.Types.Impl (runWordleT)
 import Wordle.Guess (askGuess)
-import Wordle.Render (renderGuesses, gameWon, gameLost)
-
+import Wordle.Game.Logic (updateGame, guessOutcome)
+import Wordle.Render (renderGuesses)
 
 -- | Get configuration and play first turn
 play :: IO ()
 play = do
   setts <- getGameSettings
-  config <- Config setts <$> getWord (dictionary setts)
-  playTurn config initialGame
+  runWordleT setts $ do
+    getWord
+    playTurn
 
-playTurn :: Config -> Game -> IO ()
-playTurn config game = do
-  game' <- updateGame config game <$> askGuess config game
-  renderGuesses game'
-  case guessOutcome config game' of
+playTurn :: WordleM m => m ()
+playTurn = do
+  settings <- getSettings
+  guess <- askGuess
+  game <- getGame
+  game' <- setGame (updateGame game guess)
+  renderGuesses
+  case guessOutcome settings game' of
     Won -> gameWon
-    OutOfTries -> gameLost config
-    WrongGuess -> playTurn config game'
-
-initialGame :: Game
-initialGame = Game [] 0 []
+    OutOfTries -> gameLost
+    WrongGuess -> playTurn

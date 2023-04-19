@@ -5,7 +5,7 @@ import Data.Char (isLetter)
 import Data.Set (Set)
 import qualified Data.Set as S
 
-import Wordle.Game.Types (Config (..), Game (..), Guess, feedbackToString, WordLength (WordLength), GameSettings (..))
+import Wordle.Game.Types (Game (..), Guess, feedbackToString, WordLength (WordLength), GameSettings (..))
 import Control.Applicative ((<|>))
 
 data Validation = InvalidLength !String !Int | InvalidCharacters (Set Char) | AlreadyExists String | NotInDictionary
@@ -17,8 +17,8 @@ instance Show Validation where
   show (AlreadyExists s) = "You already tried with " ++ s
   show NotInDictionary = "Not in the current dictionary. Try again"
 
-validate :: Config -> Game -> Guess -> Maybe Validation
-validate Config{settings} Game{guesses} guess = tryAlreadyExist <|> tryInvalidCharacters <|> tryInvalidLength <|> tryNotInDictionary
+validate :: GameSettings -> Game -> Guess -> Maybe Validation
+validate settings Game{guesses} guess = tryAlreadyExist <|> tryInvalidCharacters <|> tryInvalidLength <|> tryNotInDictionary
   where
     tryInvalidCharacters =
       let s = S.fromList (filter (not . isLetter) guess)

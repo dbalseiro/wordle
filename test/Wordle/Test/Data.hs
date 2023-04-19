@@ -1,12 +1,9 @@
-module Wordle.Test.Data (cfg, game, fb) where
+module Wordle.Test.Data (gameSettings, game, fb) where
 
 import Wordle.Game.Types
 
-cfg :: Config
-cfg = Config gameSettings "SAMPL"
-
 game :: Game
-game = Game [] 0 []
+game = Game [] 0 [] ""
 
 fb :: Feedback
 fb = map (`FeedbackUnit` Incorrect) "HELLO"
