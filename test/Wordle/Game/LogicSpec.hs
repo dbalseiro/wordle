@@ -11,10 +11,10 @@ spec = do
   describe "updateGame" $ do
     it "adds a correct feedback" $
       let (game', ans) = losingGame
-       in updateGame baseGame ans `shouldBe` game'
+       in updateGame ans baseGame `shouldBe` game'
     it "adds a failing feedback" $
       let (game', ans) = winningGame
-       in updateGame baseGame ans `shouldBe` game'
+       in updateGame ans baseGame `shouldBe` game'
   describe "guessOutcome" $ do
     context "when you guess right" $ do
       it "returns Winning outcome" $

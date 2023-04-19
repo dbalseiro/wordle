@@ -11,8 +11,8 @@ import Wordle.Game.Types ( Game (..)
                          , feedbackToString, Tries (..), GameSettings (..)
                          )
 
-updateGame :: Game -> Guess -> Game
-updateGame Game{word, guesses, try} guess =
+updateGame :: Guess -> Game -> Game
+updateGame guess Game{word, guesses, try} =
   let feedback = mkFeedback (zip word guess)
    in Game { guesses = feedback : guesses
            , try = try + 1

@@ -1,4 +1,3 @@
-{-# LANGUAGE LambdaCase #-}
 module Wordle.Game (play) where
 
 import Wordle.Game.Types (Outcome (..))
@@ -21,10 +20,9 @@ playTurn :: WordleM m => m ()
 playTurn = do
   settings <- getSettings
   guess <- askGuess
-  game <- getGame
-  game' <- setGame (updateGame game guess)
+  game <- getGame >>= setGame . updateGame guess
   renderGuesses
-  case guessOutcome settings game' of
+  case guessOutcome settings game of
     Won -> gameWon
     OutOfTries -> gameLost
     WrongGuess -> playTurn
