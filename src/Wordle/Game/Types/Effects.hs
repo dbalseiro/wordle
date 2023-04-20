@@ -1,13 +1,16 @@
-module Wordle.Game.Types.Effects (WordleM(..)) where
+module Wordle.Game.Types.Effects (WordleStateManagementM(..), WordleRandomM(..), WordleDisplayM(..)) where
 
 import Wordle.Game.Types
 
-class Monad m => WordleM m where
+class Monad m => WordleStateManagementM m where
   getSettings :: m GameSettings
-  setGame :: Game -> m Game
+  setGame :: Game -> m ()
   getGame :: m Game
-  throwError :: WordleException -> m a
+
+class Monad m => WordleRandomM m where
   pickWord :: Dictionary -> m ()
+
+class Monad m => WordleDisplayM m where
   displayPrompt :: String -> m ()
   getInput :: m String
   renderValidationError :: String -> m ()

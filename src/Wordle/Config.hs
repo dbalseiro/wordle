@@ -11,7 +11,7 @@ import Wordle.Game.Types ( GameSettings (..)
 import System.Environment (lookupEnv)
 
 import Control.Exception (throwIO)
-import Wordle.Game.Types.Effects (WordleM (..))
+import Wordle.Game.Types.Effects
 
 getGameSettings :: IO GameSettings
 getGameSettings = do
@@ -28,10 +28,7 @@ getDictionary :: WordLength -> IO Dictionary
 getDictionary (WordLength 5) = lines <$> readFile "db"
 getDictionary (WordLength n) = throwIO (WordLengthNotImplemented n)
 
-getWord :: WordleM m => m ()
+getWord :: (WordleStateManagementM m, WordleRandomM m) => m ()
 getWord = do
   dict <- dictionary <$> getSettings
-  let limit = length dict
-   in case limit of
-        0 -> throwError EmptyDictionary
-        _ -> pickWord dict
+  pickWord dict

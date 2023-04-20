@@ -2,13 +2,12 @@
 {-# LANGUAGE RecordWildCards #-}
 module Wordle.Game.Types.Impl (WordleT(..), runWordleT) where
 
-import Wordle.Game.Types.Effects (WordleM(..))
+import Wordle.Game.Types.Effects
 import Wordle.Game.Types (Game(..), GameSettings, initialGame, FeedbackUnit (..), Accuracy (..))
 
 import Control.Monad.Reader (ReaderT, MonadReader, runReaderT, ask)
 import Control.Monad.State (StateT, evalStateT, modify, MonadState, put, get)
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import Control.Exception (throwIO)
 
 import System.Random (randomRIO)
 import System.Console.ANSI
@@ -19,18 +18,19 @@ newtype WordleT a = WordleT { unWordleT :: ReaderT GameSettings (StateT Game IO)
 runWordleT :: GameSettings -> WordleT a -> IO a
 runWordleT settings = flip evalStateT initialGame . flip runReaderT settings . unWordleT
 
-instance WordleM WordleT where
-  setGame g = put g >> return g
-  getGame = get
-
-  getSettings = ask
-
-  throwError = liftIO . throwIO
-
+instance WordleRandomM WordleT where
   pickWord dict = do
     i <- liftIO $ randomRIO (0, length dict)
     modify (\game -> game { word = dict !! i })
 
+
+instance WordleStateManagementM WordleT where
+  setGame = put
+  getGame = get
+  getSettings = ask
+
+
+instance WordleDisplayM WordleT where
   displayPrompt = liftIO . putStr
   getInput = liftIO getLine
 

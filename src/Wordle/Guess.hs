@@ -4,9 +4,9 @@ module Wordle.Guess (askGuess) where
 import Wordle.Guess.Validate (validate)
 import Wordle.Game.Types (Guess)
 import Data.Char (toUpper)
-import Wordle.Game.Types.Effects (WordleM (..))
+import Wordle.Game.Types.Effects (WordleStateManagementM(..), WordleDisplayM (..))
 
-askGuess :: WordleM m => m Guess
+askGuess :: (WordleDisplayM m, WordleStateManagementM m) => m Guess
 askGuess = do
   displayPrompt "Make a guess: "
   ans <- fmap toUpper <$> getInput
